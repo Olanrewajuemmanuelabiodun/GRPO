@@ -20,11 +20,15 @@ The GRPO algorithm operates in four steps for each training iteration:
 3. Advantage Calculation. For each group of G completions from the same prompt:
    Compute the group mean μ and group standard deviation σ of the rewards.
 4. The advantage of each completion is:
-   $$
+
+$$
 A_i = \frac{r_i - \mu}{\sigma}
 $$
-where \frac{r_i} is the reward score.
+
+where $r_i$ is the reward score.
+
 5. Policy Update. Update the policy to maximize the GRPO objective:
+
 $$
 J_{\text{GRPO}} = \mathbb{E} \left[
 \frac{1}{G} \sum_{i=1}^{G}
