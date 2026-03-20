@@ -62,4 +62,30 @@ Checks whether the equation in the answer tags is mathematically correct by doin
 Note: The reward funtion does not include the following: 
 reward for good reasoning, using the word wait, self-correction. This is done so the model can discover the aha moment.
 
+## Experiments
+All the experiments was done on Runpod using NVIDIA H100 80 GB SXM GPU.
+
+For the experiment Qwen2.5-3B-Instruct was used because it offers a strong balance between reasoning ability, stability, and compute efficiency. It is large enough to learn multi-step reasoning patterns needed for GRPO and gives a clean, structured starting policy for GRPO to improve rather than learn from scratch, but still small enough to train on limited GPU resources. A smaller model usually struggles with multi-step reasoning and collapses under RL reward noise. 
+
+## Understanding the Key Parameters
+learning_rate = 5e-7: Very small learning rate for stability
+num_generations = 2: Number of completions generated per prompt for GRPO’s group comparison. More generations = better advantage estimates but more compute.
+beta = 0.001: KL divergence penalty weight. Keeps the policy close to the reference model.
+max_completion_length = 1024: Maximum tokens the model can generate per completion. Must be long enough for the model to “think” and produce an answer.
+max_steps = 20: Total training steps. The aha moment typically begins around step 100–200. Increasing the max_steps leads to more compute resources.
+save_steps = 1: Checkpoints are saved every 1 step, to inspect the model behavior at any point during training. 
+
+## Further training
+
+To train the model further say max_steps = 500 which is the where the aha moment occur it is advised to use LLM parallelism tecnhiques to esnure distributed training. Training for max_steps = 500 on a single GPU will take days. 
+One of the recommended way for the parallelism is using DeepSpeed and ensure ZeRO Stage 3 where the model parameters, gradients, and optimizer states are shards across all training GPUs.
+
+Say 4 GPUs, 3 of them will be use for training computation (forward pass, backward pass, optimizer step). And the remaining GPU is use by vLLM for generation. Where during each GRPO step, the training GPUs send prompts to the vLLM server, which generates the G completions in parallel using optimized inference. This separation is efficient because generation (autoregressive, memory-bandwidth bound) and training (compute-bound with gradient computation) have very different hardware utilization profiles.
+
+## Expected behavior if train for about 450 steps
+Early training (step ∼25–50): The model likely produces garbled or incorrectly formatted output. 
+Format learning (step ∼50–100): The model uses <think> and <answer> tags correctly but its reasoning is primitive or incorrect.
+Verbal reasoning (step ∼100–150): The model begins to explain its thinking in natural language, trying different combinations of numbers.
+The aha moment (step ∼150–250): The model exhibits self-correction.
+Systematic reasoning (step ∼300–450): The model methodically tries combinations and evaluates them, demonstrating a programmatic approach.
 
