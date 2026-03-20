@@ -27,21 +27,39 @@ $$
 
 where $r_i$ is the reward score.
 
-5. Policy Update. Update the policy to maximize the GRPO objective:
+5. Policy Update. Update the policy to maximize the GRPO objective based on GPO formula:
 
-$$
-J_{\mathrm{GRPO}} =
-\mathbb{E} \Bigg[
-\frac{1}{G} \sum_{i=1}^{G}
-\min \Big(
-\frac{\pi_\theta(o_i | q)}{\pi_{\theta_{\mathrm{old}}}(o_i | q)} A_i,\;
-\mathrm{clip}\Big(
-\frac{\pi_\theta(o_i | q)}{\pi_{\theta_{\mathrm{old}}}(o_i | q)},
-1 - \varepsilon,\; 1 + \varepsilon
-\Big) A_i
-\Big)
-- \beta \, D_{\mathrm{KL}}(\pi_\theta \| \pi_{\mathrm{ref}})
-\Bigg]
-$$
+## The Countdown Game: A Reasoning Testbed
+The experiment uses the Countdown Game as the task for training the model to reason.
+This is a numerical puzzle where:
+You are given a set of numbers (e.g., [3, 7, 12, 50]).
+You are given a target number (e.g., 28).
+You must combine the given numbers using basic arithmetic (+, −, ×, ÷) to reach the target.
+Each number may be used exactly once.
 
-where $\varepsilon$ is the clipping ratio, $\beta$ is the KL divergence coefficient, $\pi_\theta$ is the current policy, and $\pi_{\text{ref}}$ is the reference policy.
+For instance: given numbers [3, 7, 12, 50] and target 28, a valid solution is: 50-12-7-3 = 28
+(each used number appears exactly once).
+
+The Countdown Game is an ideal example for studying emergent reasoning because:
+1. It has verifiable answers that can be check if the equation is mathematically correct or not.
+2. It requires multi-step reasoning. The model must try different combinations to arrive at the right answer.
+3. It rewards systematic exploration than guessing.
+4. It ensures that the model cannot memorize solutions because different combination of numbers is needed forcing the model to learn strategies and not answers.
+
+## Reward Functions
+The training uses two rule-based reward functions (no learned reward model needed)
+
+Format Reward:
+Checks whether the model’s output follows the required format: Returns 1.0 if the format is correct, 0.0 otherwise. This teaches the model to separate its thinking from its answer (a critical structural pattern for reasoning).
+
+Accuracy Reward:
+Checks whether the equation in the answer tags is mathematically correct by doing:
+1. Extracts the equation from the answer tags.
+2. Verifies that each given number is used exactly once.
+3. Evaluates the equation and checks if it equals the target (within tolerance of 10−5).
+4. Returns 1.0 for correct, 0.0 for incorrect.
+
+Note: The reward funtion does not include the following: 
+reward for good reasoning, using the word wait, self-correction. This is done so the model can discover the aha moment.
+
+
