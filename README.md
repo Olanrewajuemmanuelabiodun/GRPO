@@ -30,17 +30,18 @@ where $r_i$ is the reward score.
 5. Policy Update. Update the policy to maximize the GRPO objective:
 
 $$
-J_{\text{GRPO}} = \mathbb{E} \left[
+J_{\mathrm{GRPO}} =
+\mathbb{E} \Bigg[
 \frac{1}{G} \sum_{i=1}^{G}
-\min \left(
-\frac{\pi_\theta(o_i \mid q)}{\pi_{\theta_{\text{old}}}(o_i \mid q)} A_i,\;
-\text{clip} \left(
-\frac{\pi_\theta(o_i \mid q)}{\pi_{\theta_{\text{old}}}(o_i \mid q)},
+\min \Big(
+\frac{\pi_\theta(o_i | q)}{\pi_{\theta_{\mathrm{old}}}(o_i | q)} A_i,\;
+\mathrm{clip}\Big(
+\frac{\pi_\theta(o_i | q)}{\pi_{\theta_{\mathrm{old}}}(o_i | q)},
 1 - \varepsilon,\; 1 + \varepsilon
-\right) A_i
-\right)
-- \beta \cdot D_{\text{KL}}(\pi_\theta \,\|\, \pi_{\text{ref}})
-\right]
+\Big) A_i
+\Big)
+- \beta \, D_{\mathrm{KL}}(\pi_\theta \| \pi_{\mathrm{ref}})
+\Bigg]
 $$
 
 where $\varepsilon$ is the clipping ratio, $\beta$ is the KL divergence coefficient, $\pi_\theta$ is the current policy, and $\pi_{\text{ref}}$ is the reference policy.
