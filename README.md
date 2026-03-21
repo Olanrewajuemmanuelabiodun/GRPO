@@ -4,7 +4,7 @@ The DeepSeek team introduced their model, DeepSeek-R1-Zero, which was trained us
 
 ## Understanding Group Relative Policy Optimization (GRPO)
 
-DeepSeek-R1 was trained using a reinforcement learning algorithm called GRPO. GRPO is a variant of policy optimization that is specifi- cally designed for language model training and is simpler and more memory-efficient than the traditional PPO (Proximal Policy Optimization) approach.  
+DeepSeek-R1 was trained using a reinforcement learning algorithm called GRPO. GRPO is a variant of policy optimization that is specifically designed for language model training and is simpler and more memory-efficient than the traditional PPO (Proximal Policy Optimization) approach.  
 GRPO is more effective than PPO because of some reasons; PPO requires four models which are;  
 (1) The policy model (the model being trained)  
 (2) A reference model (frozen copy of the original model, necessary for KL divergence)  
