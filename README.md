@@ -77,7 +77,7 @@ save_steps = 1: Checkpoints are saved every 1 step, to inspect the model behavio
 
 ## Further training
 
-To train the model further say max_steps = 500 which is where the aha moment occur it is advised to use LLM parallelism tecnhiques to ensure distributed training. Training for max_steps = 500 on a single GPU will take days. 
+To train the model further say max_steps = 500 which is where the aha moment occur it is advised to use LLM parallelism techniques to ensure distributed training. Training for max_steps = 500 on a single GPU will take days. 
 One of the recommended way for the parallelism is using DeepSpeed and ensure ZeRO Stage 3 where the model parameters, gradients, and optimizer states are shards across all training GPUs.
 
 Say 4 GPUs, 3 of them will be use for training computation (forward pass, backward pass, optimizer step). And the remaining GPU is use by vLLM for generation. Where during each GRPO step, the training GPUs send prompts to the vLLM server, which generates the G completions in parallel using optimized inference. This separation is efficient because generation (autoregressive, memory-bandwidth bound) and training (compute-bound with gradient computation) have very different hardware utilization profiles.
