@@ -27,7 +27,7 @@ $$
 
 where $r_i$ is the reward score.
 
-5. Policy Update. Update the policy to maximize the GRPO objective based on GPO formula:
+5. Policy Update. Update the policy to maximize the GRPO objective based on GRPO formula:
 
 ## The Countdown Game: A Reasoning Testbed
 The experiment uses the Countdown Game as the task for training the model to reason.
