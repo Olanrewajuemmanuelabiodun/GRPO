@@ -56,7 +56,7 @@ Accuracy Reward:
 Checks whether the equation in the answer tags is mathematically correct by doing:
 1. Extracts the equation from the answer tags.
 2. Verifies that each given number is used exactly once.
-3. Evaluates the equation and checks if it equals the target (within tolerance of 10−5).
+3. Evaluates the equation and checks if it equals the target (within tolerance of 10^−5).
 4. Returns 1.0 for correct, 0.0 for incorrect.
 
 Note: The reward funtion does not include the following: 
